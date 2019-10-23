@@ -1,0 +1,25 @@
+@require './basic'
+
+.main
+  max-width 800px
+  margin 30px auto
+  padding 10px
+#container
+#bg
+  position fixed
+  left 0
+  right 0
+  top 0
+  bottom 0
+  z-index 1
+#container
+  z-index 2
+  overflow scroll
+.icon
+  display inline-block
+  border 1px solid #aaa
+  margin-left 3px
+  &:hover
+    border 1px solid #aaa
+  &.active
+    border 1px solid red
