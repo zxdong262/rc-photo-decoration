@@ -160,12 +160,11 @@ const store = SubX.create({
     }
     const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, config.width, config.height)
-    ctx.fillStyle = config.bgColor
-    ctx.fill()
-    const r = config.width / 2 - config.frameWidth
+    const c = config.width / 2
+    const r = c - config.frameWidth
     ctx.strokeStyle = config.frameColor
     ctx.lineWidth = config.frameWidth
-    ctx.arc(r, r, r, 0, 2 * Math.PI, false)
+    ctx.arc(c, c, r, 0, 2 * Math.PI, false)
     ctx.stroke()
     ctx.clip()
     ctx.drawImage(
@@ -180,8 +179,6 @@ const store = SubX.create({
     }
     const ctx = canvas.getContext('2d')
     ctx.clearRect(0, 0, config.width, config.height)
-    ctx.fillStyle = config.bgColor
-    ctx.fill()
     let file = store.file()
     if (!file) {
       file = store.getBaseImg()
