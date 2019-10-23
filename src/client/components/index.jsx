@@ -82,10 +82,13 @@ export default class App extends Component {
                   onClick={this.props.store.download}
                   className='mg1l mg1y'
                 >Download</Button>
-                <Button
-                  onClick={this.props.store.download1}
-                  className='mg1l mg1y'
-                >Download</Button>
+                {
+                  /* <Button
+                    onClick={this.props.store.download1}
+                    className='mg1l mg1y'
+                  >Download</Button>
+                  */
+                }
               </span>
             )
             : null
@@ -96,6 +99,7 @@ export default class App extends Component {
           <img src={p2} id='img_p2' />
           <img src={p3} id='img_p3' />
           <img src={base} id='img_base' />
+          <a href='/' id='a' />
           <canvas
             id='download'
             width={840}
