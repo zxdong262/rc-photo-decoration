@@ -3,7 +3,6 @@ import { fromEvent } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 import copy from 'json-deep-copy'
 import download from '../common/download'
-import { resolve } from 'path'
 
 const icons = [
   {
