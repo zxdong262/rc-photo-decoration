@@ -95,9 +95,10 @@ const store = SubX.create({
       store.image = imageDefault(base, store.iconObj)
     }
   },
-  handleFile (e) {
-    const file = e.target.files[0]
+  handleFile (files) {
+    const file = files[0].file
     console.log(file)
+    file.uid = file.name + '_' + file.size + '_' + file.lastModified
     store.file = () => file
     store.fileId = file.uid
     store.renderIcons()
@@ -112,11 +113,23 @@ const store = SubX.create({
     )
   },
   download () {
-    const image = document.getElementById('download')
-      .toDataURL('image/png')
-      .replace('image/png', 'image/octet-stream')
-    const fileName = 'rc_dec_' + Date.now() + '.png'
-    return download(fileName, image)
+    // from https://stackoverflow.com/questions/8126623/downloading-canvas-element-to-an-image
+    let canvasImage = document.getElementById('download').toDataURL('image/png')
+
+    // this can be used to download any image from webpage to local disk
+    let xhr = new window.XMLHttpRequest()
+    xhr.responseType = 'blob'
+    xhr.onload = function () {
+      let a = document.createElement('a')
+      a.href = window.URL.createObjectURL(xhr.response)
+      a.download = 'rc-deced.png'
+      a.style.display = 'none'
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+    }
+    xhr.open('GET', canvasImage) // This is to download the canvas Image
+    xhr.send()
   },
   getImageFromFile (file) {
     return new Promise((resolve) => {

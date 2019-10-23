@@ -9,7 +9,7 @@ const { resolve } = require('path')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const { env } = process
 const devPort = env.devPort || 6066
-const host = env.host || 'localhost'
+const host = env.host || '0.0.0.0'
 const { version } = pack
 let isProd = env.NODE_ENV === 'production'
 const extractTextPlugin1 = new MiniCssExtractPlugin({

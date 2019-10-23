@@ -1,4 +1,5 @@
 import { Component } from 'react-subx'
+import { ImagePicker } from 'antd-mobile'
 import { Button, Tag, Spin } from 'antd'
 import classnames from 'classnames'
 import p1 from '../images/p1.png'
@@ -23,7 +24,7 @@ export default class App extends Component {
       <div className='pd2b'>
         <h1>
           RC photo decoration tool
-          <sup className='mg1l'><Tag color='red'>Beta</Tag></sup>
+          <sup className='mg1l'><Tag small>Beta</Tag></sup>
         </h1>
       </div>
     )
@@ -66,23 +67,24 @@ export default class App extends Component {
   }
 
   renderControl () {
-    let props = {
-      accept: '.png,.jpg,.gif'
-    }
     let { fileId } = this.props.store
     return (
       <div className='control-wrap pd1y'>
-        <input {...props} type='file' onChange={this.props.store.handleFile} />
+        <ImagePicker
+          onChange={this.props.store.handleFile}
+          accept='image/*'
+        />
         {
           fileId
             ? (
               <Button
                 onClick={this.props.store.download}
-                className='mg1l'
+                className='mg1l mg1y'
               >Download</Button>
             )
             : null
         }
+        <p>If you can select or download image, you may need open this url in browser.</p>
         <div className='hide'>
           <img src={p1} id='img_p1' />
           <img src={p2} id='img_p2' />
