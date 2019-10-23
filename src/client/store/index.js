@@ -95,7 +95,8 @@ const store = SubX.create({
       store.image = imageDefault(base, store.iconObj)
     }
   },
-  handleFile (file) {
+  handleFile (e) {
+    const file = e.target.files[0]
     console.log(file)
     store.file = () => file
     store.fileId = file.uid

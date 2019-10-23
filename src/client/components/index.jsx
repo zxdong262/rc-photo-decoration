@@ -1,5 +1,5 @@
 import { Component } from 'react-subx'
-import { Button, Upload, Tag, Spin } from 'antd'
+import { Button, Tag, Spin } from 'antd'
 import classnames from 'classnames'
 import p1 from '../images/p1.png'
 import p2 from '../images/p2.png'
@@ -67,18 +67,12 @@ export default class App extends Component {
 
   renderControl () {
     let props = {
-      showUploadList: false,
-      beforeUpload: this.props.store.handleFile,
       accept: '.png,.jpg,.gif'
     }
     let { fileId } = this.props.store
     return (
       <div className='control-wrap pd1y'>
-        <Upload
-          {...props}
-        >
-          <Button>Select photo</Button>
-        </Upload>
+        <input {...props} type='file' onChange={this.props.store.handleFile} />
         {
           fileId
             ? (
