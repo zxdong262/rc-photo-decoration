@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import p1 from '../images/p1.png'
 import p2 from '../images/p2.png'
 import p3 from '../images/p3.png'
+import qr from '../images/qr.png'
 import base from '../images/base.jpg'
 
 export default class App extends Component {
@@ -19,7 +20,7 @@ export default class App extends Component {
 
   renderTitle () {
     return (
-      <div className='pd2b aligncenter'>
+      <div className='pd2b'>
         <h1>
           RC photo decoration tool
           <sup className='mg1l'><Tag color='red'>Beta</Tag></sup>
@@ -35,6 +36,10 @@ export default class App extends Component {
         <p>
           Powered by
           <a href='https://github.com/tylerlong/subx' target='_blank' className='mg1x'>Subx</a>
+        </p>
+        <p>
+          scan QR code to visit this page:
+          <img src={qr} className='block mg1y' />
         </p>
       </div>
     )
@@ -66,6 +71,7 @@ export default class App extends Component {
       beforeUpload: this.props.store.handleFile,
       accept: '.png,.jpg,.gif'
     }
+    let { fileId } = this.props.store
     return (
       <div className='control-wrap pd1y'>
         <Upload
@@ -73,10 +79,16 @@ export default class App extends Component {
         >
           <Button>Select photo</Button>
         </Upload>
-        <Button
-          onClick={this.props.store.download}
-          className='mg1l'
-        >Download</Button>
+        {
+          fileId
+            ? (
+              <Button
+                onClick={this.props.store.download}
+                className='mg1l'
+              >Download</Button>
+            )
+            : null
+        }
         <div className='hide'>
           <img src={p1} id='img_p1' />
           <img src={p2} id='img_p2' />

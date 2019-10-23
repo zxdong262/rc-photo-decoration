@@ -57,7 +57,7 @@ const store = SubX.create({
   icon: 'p1',
   loading: false,
   file: () => null,
-  fileId: 'd',
+  fileId: '',
   downloadImageSize: 840,
   iconImageSize: 90,
   getBaseImg () {
