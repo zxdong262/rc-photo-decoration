@@ -77,14 +77,20 @@ export default class App extends Component {
         {
           fileId
             ? (
-              <Button
-                onClick={this.props.store.download}
-                className='mg1l mg1y'
-              >Download</Button>
+              <span>
+                <Button
+                  onClick={this.props.store.download}
+                  className='mg1l mg1y'
+                >Download</Button>
+                <Button
+                  onClick={this.props.store.download1}
+                  className='mg1l mg1y'
+                >Download</Button>
+              </span>
             )
             : null
         }
-        <p>If you can select or download image, you may need open this url in browser.</p>
+        <p>If you can not select or download image, you may need open this url in browser.</p>
         <div className='hide'>
           <img src={p1} id='img_p1' />
           <img src={p2} id='img_p2' />
