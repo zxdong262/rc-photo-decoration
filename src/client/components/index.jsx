@@ -81,14 +81,11 @@ export default class App extends Component {
                 <Button
                   onClick={this.props.store.download}
                   className='mg1l mg1y'
-                >Download</Button>
-                {
-                  /* <Button
-                    onClick={this.props.store.download1}
-                    className='mg1l mg1y'
-                  >Download</Button>
-                  */
-                }
+                >Fast download</Button>
+                <Button
+                  onClick={this.props.store.download1}
+                  className='mg1l mg1y'
+                >Download remotely</Button>
               </span>
             )
             : null

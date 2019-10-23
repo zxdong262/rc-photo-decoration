@@ -131,12 +131,14 @@ const store = SubX.create({
     xhr.open('GET', canvasImage) // This is to download the canvas Image
     xhr.send()
   },
-  download1 () {
+  async download1 () {
+    store.loading = true
     // from https://stackoverflow.com/questions/8126623/downloading-canvas-element-to-an-image
     const image = document.getElementById('download').toDataURL('image/png')
-      .replace('image/png', 'image/octet-stream')
+    // .replace('image/png', 'image/octet-stream')
 
-    download('rc-dec.png', image)
+    await download('rc-dec.png', image)
+    store.loading = false
   },
   getImageFromFile (file) {
     return new Promise((resolve) => {
