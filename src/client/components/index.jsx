@@ -9,7 +9,12 @@ import base from '../images/base.jpg'
 export default class App extends Component {
   componentDidMount () {
     this.props.store.resize()
-    this.props.store.fileId = 'n'
+    this.init()
+  }
+
+  async init () {
+    await this.props.store.renderIcons()
+    setTimeout(this.props.store.renderCanvases, 1000)
   }
 
   renderTitle () {
@@ -39,14 +44,14 @@ export default class App extends Component {
     const { width, height } = this.props.store.image
     return (
       <div className='canvas-wrap'>
-        <canavs
-          id='pre'
+        <canvas
+          id='preview'
           width={width}
           height={height}
         />
         <div className='hide'>
-          <canavs
-            id='r_pre'
+          <canvas
+            id='r_preview'
             width={width}
             height={height}
           />
@@ -62,7 +67,7 @@ export default class App extends Component {
       accept: '.png,.jpg,.gif'
     }
     return (
-      <div className='control-wrap'>
+      <div className='control-wrap pd1y'>
         <Upload
           {...props}
         >
@@ -77,12 +82,12 @@ export default class App extends Component {
           <img src={p2} id='img_p2' />
           <img src={p3} id='img_p3' />
           <img src={base} id='img_base' />
-          <canavs
+          <canvas
             id='download'
             width={840}
             height={840}
           />
-          <canavs
+          <canvas
             id='r_download'
             width={840}
             height={840}
@@ -122,7 +127,7 @@ export default class App extends Component {
   renderIcons () {
     const { icons } = this.props.store
     return (
-      <div className='icons'>
+      <div className='icons pd1b'>
         {icons.map(this.renderIcon)}
       </div>
     )
@@ -135,6 +140,7 @@ export default class App extends Component {
         <Spin spinning={this.props.store.loading}>
           {this.renderWorkSpace()}
           {this.renderControl()}
+          {this.renderIcons()}
           {this.renderFooter()}
         </Spin>
       </div>

@@ -3,6 +3,7 @@ import { fromEvent } from 'rxjs'
 import { debounceTime } from 'rxjs/operators'
 import copy from 'json-deep-copy'
 import download from '../common/download'
+import { resolve } from 'path'
 
 const icons = [
   {
@@ -45,7 +46,7 @@ const imageDefault = (width = 500, icon = icons[0]) => {
       top: icon.top * f
     },
     round: !!icon.round,
-    frameWidth: 5,
+    frameWidth: 20 * f,
     frameColor: '#ffffff',
     bgColor: '#aaaaaa'
   }
@@ -57,7 +58,9 @@ const store = SubX.create({
   icon: 'p1',
   loading: false,
   file: () => null,
-  fileId: '',
+  fileId: 'd',
+  downloadImageSize: 840,
+  iconImageSize: 90,
   getBaseImg () {
     return document.getElementById('img_base')
   },
@@ -65,10 +68,18 @@ const store = SubX.create({
     return document.getElementById(`img_${name}`)
   },
   get iconObj () {
-    return store.icons.find(n => n.name === store.icon)
+    return icons.find(n => n.name === store.icon)
   },
-  renderCanvases () {
-
+  async renderCanvases () {
+    const id1 = 'preview'
+    const config = copy(store.image)
+    await store.renderOne(id1, config)
+    const id2 = 'download'
+    const config2 = imageDefault(
+      store.downloadImageSize,
+      store.iconObj
+    )
+    await store.renderOne(id2, config2)
   },
   resize () {
     let { innerWidth } = window
@@ -82,23 +93,72 @@ const store = SubX.create({
       base = innerWidth - 20
     }
     if (base !== store.image.width) {
-      store.image = imageDefault(base, copy(store.iconObj))
+      store.image = imageDefault(base, store.iconObj)
     }
   },
   handleFile (file) {
     console.log(file)
-    store.fileId = file.uid
     store.file = () => file
+    store.fileId = file.uid
+    store.renderIcons()
+    store.renderCanvases()
     return false
   },
   onClickIcon (icon) {
     store.icon = icon.name
+    store.image = imageDefault(
+      store.image.width,
+      store.iconObj
+    )
   },
   download () {
     const image = document.getElementById('download')
       .toDataURL('image/png')
       .replace('image/png', 'image/octet-stream')
-    return download(image)
+    const fileName = 'rc_dec_' + Date.now() + '.png'
+    return download(fileName, image)
+  },
+  getImageFromFile (file) {
+    return new Promise((resolve) => {
+      if (window.rcimg && window.rcimg.id === file.uid) {
+        console.log('use cache')
+        return resolve(window.rcimg.img)
+      }
+      const reader = new window.FileReader()
+      reader.onload = (event) => {
+        const img = new window.Image()
+        img.onload = () => {
+          window.rcimg = {
+            id: file.uid,
+            img: img
+          }
+          console.log('resolve cache')
+          resolve(img)
+        }
+        img.src = event.target.result
+      }
+      reader.readAsDataURL(file)
+    })
+  },
+  async getRoundImage (id, config, image) {
+    const canvas = document.getElementById(`r_${id}`)
+    if (!canvas) {
+      return
+    }
+    const ctx = canvas.getContext('2d')
+    ctx.clearRect(0, 0, config.width, config.height)
+    ctx.fillStyle = config.bgColor
+    ctx.fill()
+    const r = config.width / 2 - config.frameWidth
+    ctx.strokeStyle = config.frameColor
+    ctx.lineWidth = config.frameWidth
+    ctx.arc(r, r, r, 0, 2 * Math.PI, false)
+    ctx.stroke()
+    ctx.clip()
+    ctx.drawImage(
+      image, 0, 0, config.width, config.height
+    )
+    return canvas
   },
   async renderOne (id, config) {
     const canvas = document.getElementById(id)
@@ -106,10 +166,17 @@ const store = SubX.create({
       return
     }
     const ctx = canvas.getContext('2d')
+    ctx.clearRect(0, 0, config.width, config.height)
     ctx.fillStyle = config.bgColor
+    ctx.fill()
     let file = store.file()
     if (!file) {
       file = store.getBaseImg()
+    } else {
+      file = await store.getImageFromFile(file)
+    }
+    if (config.round) {
+      file = await store.getRoundImage(id, config, file)
     }
     ctx.drawImage(
       file, 0, 0, config.width, config.height
@@ -128,7 +195,7 @@ const store = SubX.create({
     store.loading = true
     for (let i = 0; i < len; i++) {
       const icon = icons[i]
-      const width = 90
+      const width = store.iconImageSize
       const config = imageDefault(width, icon)
       config.baseImageName = 'img_p' + (i + 1)
       await store.renderOne('icon_' + icon.name, config)
@@ -138,14 +205,9 @@ const store = SubX.create({
 })
 
 SubX.autoRun(store, () => {
+  console.log('store.image.width change')
   store.renderCanvases()
   return store.image
-})
-
-SubX.autoRun(store, () => {
-  store.renderIcons()
-  store.renderCanvases()
-  return store.fileId
 })
 
 fromEvent(window, 'resize')

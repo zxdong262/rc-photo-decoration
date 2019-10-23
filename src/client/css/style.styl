@@ -3,6 +3,7 @@
 .main
   max-width 800px
   margin 30px auto
+  padding 10px
 #container
 #bg
   position fixed
@@ -14,5 +15,11 @@
 #container
   z-index 2
   overflow scroll
-.canvas-wrap
-  padding 10px
+.icon
+  display inline-block
+  border 1px solid #aaa
+  margin-left 3px
+  &:hover
+    border 1px solid #aaa
+  &.active
+    border 1px solid red
